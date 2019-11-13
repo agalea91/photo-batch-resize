@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+__author__ = 'Alex Galea'
+
+# Usage e.g.
+# python photo-batch-resize-constrained.py --images-folder=lightroom-exports --max-px-size=1080
+
+EXTENSIONS = [
+    'jpg', 'jpeg', 'png',
+    'JPG', 'JPEG', 'PNG',
+]
+
 import click
 import glob
 import os
@@ -6,7 +17,7 @@ from PIL import Image
 @click.command()
 @click.option(
     '--max-px-size',
-    default=1080,
+    default=2560,
     help='The max height / width of image in pixels.'
 )
 @click.option(
@@ -16,8 +27,8 @@ from PIL import Image
 )
 def main(max_px_size, images_folder):
     imgs = []
-    imgs += sorted(glob.glob(os.path.join(images_folder, '*.jpg')))
-    imgs += sorted(glob.glob(os.path.join(images_folder, '*.jpeg')))
+    for ext in EXTENSIONS:
+        imgs += sorted(glob.glob(os.path.join(images_folder, '*.{}'.format(ext))))
     print('Image files to resize:')
     print('\n'.join(imgs))
     output_folder = '{}-{}px'.format(images_folder, max_px_size)
@@ -52,7 +63,7 @@ def resize(img_path, max_px_size, output_folder):
         if width_0 < height_0:
             hpercent = max_px_size / float(height_0)
             wsize = int(float(width_0) * float(hpercent))
-            img = img.resize((max_px_size, wsize), Image.ANTIALIAS)
+            img = img.resize((wsize, max_px_size), Image.ANTIALIAS)
             print('writing {} to disk'.format(out_f_path))
             img.save(out_f_path)
             return
