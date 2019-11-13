@@ -1,4 +1,6 @@
-# Photo Batch Resize ## Installation
+# Photo Batch Resize
+
+## Installation
 ```
 python3 -m venv venv
 source venv/bin/activate
